@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './ImageGenerator.css';
-import default_image from '../Assets/default_image.svg';
+import React, { useState, useRef, useEffect } from "react";
+import "./ImageGenerator.css";
+import default_image from "../Assets/default_image.svg";
 
 const ImageGenerator = () => {
-  const [image_url, setImage_url] = useState('/');
+  const [image_url, setImage_url] = useState("/");
   let inputRef = useRef(null);
   const [loading, setloading] = useState(false);
   const [showPrompts, setShowPrompts] = useState(false);
-  const [randomPrompt, setRandomPrompt] = useState('');
+  const [randomPrompt, setRandomPrompt] = useState("");
   const [savedImages, setSavedImages] = useState([]);
 
   useEffect(() => {
@@ -16,24 +16,24 @@ const ImageGenerator = () => {
   }, []);
 
   const imageGenerator = async () => {
-    if (inputRef.current.value === '') {
+    if (inputRef.current.value === "") {
       return 0;
     }
     setloading(true);
     const response = await fetch(
-      'https://api.openai.com/v1/images/generations',
+      "https://api.openai.com/v1/images/generations",
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization:
-            'Bearer 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',
-          'User-Agent': 'Chrome',
+            "Bearer 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",
+          "User-Agent": "Chrome",
         },
         body: JSON.stringify({
           prompt: inputRef.current.value,
           n: 1,
-          size: '512x512',
+          size: "512x512",
         }),
       }
     );
@@ -51,44 +51,49 @@ const ImageGenerator = () => {
   };
 
   const downloadImage = () => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = image_url;
-    link.download = 'generated_image.png';
+    link.download = "generated_image.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   const saveImage = async (imageUrl, prompt) => {
-    await fetch('http://localhost:5000/saveImage', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: imageUrl,
-        prompt: prompt,
-      }),
-    });
+    await fetch(
+      "http://https://ai-image-generator-ww4m.onrender.com/saveImage",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          url: imageUrl,
+          prompt: prompt,
+        }),
+      }
+    );
   };
 
   const fetchSavedImages = async () => {
-    const response = await fetch('http://localhost:5000/getSavedImages');
+    const response = await fetch(
+      "http://https://ai-image-generator-ww4m.onrender.com/getSavedImages"
+    );
     const data = await response.json();
     setSavedImages(data);
   };
 
   const promptSuggestions = [
-    'A peaceful beach sunset',
-    'A futuristic city skyline',
-    'A cute puppy playing in the grass',
-    'An abstract geometric pattern',
-    'A magical forest with fireflies',
-    'A bustling market in a foreign city',
-    'A cozy winter cabin in the mountains',
-    'A surreal underwater landscape',
-    'A vintage retro poster design',
-    'A dreamy outer space scene',
+    "A peaceful beach sunset",
+    "A futuristic city skyline",
+    "A cute puppy playing in the grass",
+    "An abstract geometric pattern",
+    "A magical forest with fireflies",
+    "A bustling market in a foreign city",
+    "A cozy winter cabin in the mountains",
+    "A surreal underwater landscape",
+    "A vintage retro poster design",
+    "A dreamy outer space scene",
   ];
 
   const getRandomPrompt = () => {
@@ -99,32 +104,32 @@ const ImageGenerator = () => {
   };
 
   return (
-    <div className='aig'>
-      <div className='header'>
+    <div className="aig">
+      <div className="header">
         AI-IMAGE-<span>GENERATOR</span>
       </div>
-      <div className='search-box'>
+      <div className="search-box">
         <input
-          type='text'
+          type="text"
           ref={inputRef}
-          className='search-input'
-          placeholder='Describe what you want to see'
+          className="search-input"
+          placeholder="Describe what you want to see"
         />
-        <div className='btn' onClick={() => imageGenerator()}>
+        <div className="btn" onClick={() => imageGenerator()}>
           Generate
         </div>
-        {image_url !== '/' && (
-          <div className='btn' onClick={() => downloadImage()}>
+        {image_url !== "/" && (
+          <div className="btn" onClick={() => downloadImage()}>
             Download
           </div>
         )}
       </div>
-      <div className='prompt-btn' onClick={getRandomPrompt}>
+      <div className="prompt-btn" onClick={getRandomPrompt}>
         Prompt
       </div>
-      {randomPrompt && <div className='random-prompt-display'></div>}
+      {randomPrompt && <div className="random-prompt-display"></div>}
       {showPrompts && (
-        <div className='prompt-suggestions'>
+        <div className="prompt-suggestions">
           <p>Try these prompts:</p>
           <ul>
             {promptSuggestions.map((prompt, index) => (
@@ -141,27 +146,27 @@ const ImageGenerator = () => {
           </ul>
         </div>
       )}
-      <div className='img-loading'>
-        <div className='image'>
+      <div className="img-loading">
+        <div className="image">
           <img
-            src={image_url === '/' ? default_image : image_url}
+            src={image_url === "/" ? default_image : image_url}
             alt={default_image}
           />
         </div>
       </div>
-      <div className='loading'>
-        <div className={loading ? 'loading-bar-full' : 'loading-bar'}></div>
-        <div className={loading ? 'loading-text' : 'display-none'}>
+      <div className="loading">
+        <div className={loading ? "loading-bar-full" : "loading-bar"}></div>
+        <div className={loading ? "loading-text" : "display-none"}>
           Loading....
         </div>
       </div>
 
       {/* Display saved images section */}
-      <div className='saved-images'>
+      <div className="saved-images">
         <h2>Saved Images</h2>
-        <div className='saved-images-list'>
+        <div className="saved-images-list">
           {savedImages.map((savedImage, index) => (
-            <div key={index} className='saved-image'>
+            <div key={index} className="saved-image">
               <img src={savedImage.url} alt={`saved-img`} />
               <p>{savedImage.prompt}</p>
             </div>
