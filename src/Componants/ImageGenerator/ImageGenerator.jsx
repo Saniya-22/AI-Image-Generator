@@ -60,24 +60,21 @@ const ImageGenerator = () => {
   };
 
   const saveImage = async (imageUrl, prompt) => {
-    await fetch(
-      "http://https://ai-image-generator-ww4m.onrender.com/saveImage",
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          url: imageUrl,
-          prompt: prompt,
-        }),
-      }
-    );
+    await fetch("https://ai-image-generator-ww4m.onrender.com/saveImage", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        url: imageUrl,
+        prompt: prompt,
+      }),
+    });
   };
 
   const fetchSavedImages = async () => {
     const response = await fetch(
-      "http://https://ai-image-generator-ww4m.onrender.com/getSavedImages"
+      "https://ai-image-generator-ww4m.onrender.com/getSavedImages"
     );
     const data = await response.json();
     setSavedImages(data);
