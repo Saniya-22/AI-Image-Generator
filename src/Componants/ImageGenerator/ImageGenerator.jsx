@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import "./ImageGenerator.css";
 import default_image from "../Assets/default_image.svg";
 
+// const BASE_URL = "https://ai-image-generator-ww4m.onrender.com";
+const BASE_URL = "http://127.0.0.1:5000";
+
 const ImageGenerator = () => {
   const [image_url, setImage_url] = useState("/");
   let inputRef = useRef(null);
@@ -27,7 +30,7 @@ const ImageGenerator = () => {
         headers: {
           "Content-type": "application/json",
           Authorization:
-            "Bearer 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",
+            "Bearer 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",
           "User-Agent": "Chrome",
         },
         body: JSON.stringify({
@@ -60,7 +63,7 @@ const ImageGenerator = () => {
   };
 
   const saveImage = async (imageUrl, prompt) => {
-    await fetch("https://ai-image-generator-ww4m.onrender.com/saveImage", {
+    await fetch(`${BASE_URL}/saveImage`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -73,11 +76,14 @@ const ImageGenerator = () => {
   };
 
   const fetchSavedImages = async () => {
-    const response = await fetch(
-      "https://ai-image-generator-ww4m.onrender.com/getSavedImages"
-    );
-    const data = await response.json();
-    setSavedImages(data);
+    try {
+      const response = await fetch(`${BASE_URL}/getImages`);
+      console.log("images", response);
+      const data = await response?.json();
+      setSavedImages(data);
+    } catch (error) {
+      console.log("error -> ", error);
+    }
   };
 
   const promptSuggestions = [
@@ -102,8 +108,23 @@ const ImageGenerator = () => {
 
   return (
     <div className="aig">
-      <div className="header">
-        AI-IMAGE-<span>GENERATOR</span>
+      <div className="header">SYNthImAGE</div>
+      <div className="text-wrapper">
+        <p>Create AI Art with AI image generator.</p>
+      </div>
+      <div className="img-loading">
+        <div className="image">
+          <img
+            src={image_url === "/" ? default_image : image_url}
+            alt={default_image}
+          />
+        </div>
+      </div>
+      <div className="loading">
+        <div className={loading ? "loading-bar-full" : "loading-bar"}></div>
+        <div className={loading ? "loading-text" : "display-none"}>
+          Loading....
+        </div>
       </div>
       <div className="search-box">
         <input
@@ -121,8 +142,11 @@ const ImageGenerator = () => {
           </div>
         )}
       </div>
-      <div className="prompt-btn" onClick={getRandomPrompt}>
-        Prompt
+      <div className="p">
+        <p>A suggestion button for easy understanding: </p>
+        <div className="prompt-btn" onClick={getRandomPrompt}>
+          Prompt
+        </div>
       </div>
       {randomPrompt && <div className="random-prompt-display"></div>}
       {showPrompts && (
@@ -143,32 +167,22 @@ const ImageGenerator = () => {
           </ul>
         </div>
       )}
-      <div className="img-loading">
-        <div className="image">
-          <img
-            src={image_url === "/" ? default_image : image_url}
-            alt={default_image}
-          />
-        </div>
-      </div>
-      <div className="loading">
-        <div className={loading ? "loading-bar-full" : "loading-bar"}></div>
-        <div className={loading ? "loading-text" : "display-none"}>
-          Loading....
-        </div>
-      </div>
 
       {/* Display saved images section */}
       <div className="saved-images">
-        <h2>Saved Images</h2>
+        <h4>INSPIRATION || RECENTS</h4>
         <div className="saved-images-list">
           {savedImages.map((savedImage, index) => (
             <div key={index} className="saved-image">
-              <img src={savedImage.url} alt={`saved-img`} />
+              {/* <img src={savedImage.url} alt={`saved-img ${index}`} /> */}
+              <a href={savedImage.url}>URL</a>
               <p>{savedImage.prompt}</p>
             </div>
           ))}
         </div>
+      </div>
+      <div className="Footer">
+        <p>Build by Saniya Malik</p>
       </div>
     </div>
   );
